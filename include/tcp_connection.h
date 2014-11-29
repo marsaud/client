@@ -15,7 +15,7 @@ public:
     typedef boost::shared_ptr<tcp_connection> pointer;
 
     static pointer create(boost::asio::io_service& ios);
-boost::asio::ip::tcp::socket& socket();
+    boost::asio::ip::tcp::socket& socket();
     void read();
 protected:
 private:

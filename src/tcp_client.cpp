@@ -25,6 +25,7 @@ void tcp_client::handle_connect(tcp_connection::pointer new_connection, const bo
 {
     if (!error)
     {
+        std::cout << "Connecté" << std::endl;
         new_connection->read();
     }
 }

@@ -34,6 +34,7 @@ void tcp_connection::handle_read(const boost::system::error_code& error, size_t 
 {
     if (!error)
     {
+        std::cout << "Server speaks" << std::endl;
         std::cout.write(&m_network_buffer[0], number_bytes_read);
         read();
     }

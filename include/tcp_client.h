@@ -1,6 +1,8 @@
 #ifndef TCP_CLIENT_H
 #define TCP_CLIENT_H
 
+#include <iostream>
+
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include "tcp_connection.h"

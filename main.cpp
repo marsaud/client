@@ -1,7 +1,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
-#include "tcp_client.h"
+#include "Client.h"
 
 int main()
 {
@@ -10,7 +10,7 @@ int main()
 		boost::asio::io_service io_service;
 		boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 7171);
 
-		tcp_client client(io_service, endpoint);
+		Client client(io_service, endpoint);
 		io_service.run();
 	}
 	catch (std::exception& e)
