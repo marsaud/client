@@ -7,6 +7,9 @@
 #include <boost/bind.hpp>
 #include "Connection.h"
 #include "UpMessage.h"
+#include "DownMessage.h"
+#include "Position.h"
+#include "Player.h"
 
 class Client
 {
@@ -22,7 +25,8 @@ class Client
 
         boost::asio::io_service& m_io_service;
         Connection::connection_ptr m_connection;
-        UpMessage m_message;
+        UpMessage m_upMessage;
+        DownMessage m_downMessage;
 };
 
 #endif // CLIENT_H

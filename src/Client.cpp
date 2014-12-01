@@ -34,7 +34,7 @@ void Client::handle_connect(Connection::connection_ptr connection, const boost::
 void Client::wait_for_data()
 {
     m_connection->async_read(
-        m_message,
+        m_downMessage,
         boost::bind(
             &Client::handle_read,
             this,
@@ -47,7 +47,23 @@ void Client::handle_read(const boost::system::error_code& error)
 {
     if (!error)
     {
-        std::cout << "Data received : " << m_message.m_login <<  " : " << m_message.m_message << std::endl;
+        switch (m_downMessage.m_type)
+        {
+        case DownMessage::PLAYER_CONNECTED :
+        case DownMessage::PLAYER_LEFT :
+            std::cout << "Room event : " << m_downMessage.m_info << std::endl;
+            break;
+        case DownMessage::WORLD_STATE :
+            std::cout << "World state" << std::endl;
+            break;
+        case DownMessage::DEFAULT_TYPE :
+            std::cout << "Default message" << std::endl;
+            break;
+        default:
+            std::cout << "???" << std::endl;
+            break;
+        }
+
         wait_for_data();
     }
     else
