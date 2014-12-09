@@ -1,7 +1,8 @@
 #include "Client.h"
 
 Client::Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint) :
-    m_io_service (io_service)
+    m_io_service (io_service),
+    m_timer(io_service, boost::posix_time::milliseconds(40))
 {
     connect(endpoint);
 }
@@ -20,6 +21,26 @@ void Client::connect(boost::asio::ip::tcp::endpoint& endpoint)
                                      this,
                                      m_connection,
                                      boost::asio::placeholders::error));
+}
+
+void Client::m_drive_events()
+{
+    m_timer.expires_from_now(boost::posix_time::milliseconds(40));
+    m_timer.async_wait(boost::bind(&Client::m_handle_events, this));
+}
+
+void Client::m_handle_events()
+{
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event))
+    {
+
+
+    }
+
+    m_drive_events();
+
 }
 
 void Client::handle_connect(Connection::connection_ptr connection, const boost::system::error_code& error)

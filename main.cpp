@@ -1,10 +1,14 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
+#include <SDL/SDL.h>
+
 #include "Client.h"
 
 int main()
 {
+    SDL_Init(SDL_INIT_VIDEO);
+
 	try
 	{
 		boost::asio::io_service io_service;
