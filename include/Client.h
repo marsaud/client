@@ -6,17 +6,26 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+
 #include "Connection.h"
 #include "UpMessage.h"
 #include "DownMessage.h"
+
 #include "Position.h"
 #include "Player.h"
+
+#include "StateController.h"
+#include "MovementController.h"
+#include "ActionController.h"
+#include "ActionProcessor.h"
+#include "MovementProcessor.h"
 
 class Client
 {
     public:
         Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint);
         virtual ~Client();
+
     protected:
     private:
         void connect(boost::asio::ip::tcp::endpoint& endpoint);
@@ -25,6 +34,11 @@ class Client
         void handle_read(const boost::system::error_code& error);
         void m_drive_events();
         void m_handle_events();
+        void handle_write(const boost::system::error_code& error);
+
+        Player* m_player;
+        StaticWorld* m_world;
+        StateController::State m_state;
 
         boost::asio::io_service& m_io_service;
         boost::asio::deadline_timer m_timer;
