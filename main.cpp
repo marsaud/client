@@ -4,22 +4,21 @@
 #include <SDL/SDL.h>
 
 #include "Client.h"
+#include "init.h"
 
 int main()
 {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_SetVideoMode(640, 400, 16, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    SDL_Surface* screen = NULL;
+    TTF_Font* font = NULL;
 
-    MovementProcessor::init();
+    initVideo(640, 400, "fonts/coure.fon", 22, screen, font);
 
 	try
 	{
 		boost::asio::io_service io_service;
 		boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 7171);
 
-
-
-		Client client(io_service, endpoint);
+		Client client(io_service, endpoint, screen);
 		io_service.run();
 	}
 	catch (std::exception& e)
@@ -27,7 +26,7 @@ int main()
 		std::cerr << e.what() << std::endl;
 	}
 
-	MovementProcessor::free();
+	quitVideo(screen, font);
 
 	return 0;
 }

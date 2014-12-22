@@ -20,10 +20,13 @@
 #include "ActionProcessor.h"
 #include "MovementProcessor.h"
 
+#include "TileDisplayZone.h"
+#include "ZoneDisplayZone.h"
+
 class Client
 {
     public:
-        Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint);
+        Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint, SDL_Surface* screen);
         virtual ~Client();
 
     protected:
@@ -39,6 +42,8 @@ class Client
         Player* m_player;
         StaticWorld* m_world;
         StateController::State m_state;
+        SDL_Surface* m_screen;
+        ZoneDisplayZone* m_zoneDisplayZone;
 
         boost::asio::io_service& m_io_service;
         boost::asio::deadline_timer m_timer;

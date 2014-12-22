@@ -1,17 +1,25 @@
 #include "Client.h"
 
-Client::Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint) :
+Client::Client(boost::asio::io_service& io_service, boost::asio::ip::tcp::endpoint& endpoint, SDL_Surface* screen) :
     m_player(NULL),
     m_world(NULL),
     m_state(StateController::IDLE),
+    m_screen(screen),
+    m_zoneDisplayZone(new ZoneDisplayZone(0,0)),
     m_io_service (io_service),
     m_timer(io_service, boost::posix_time::milliseconds(40))
 {
+    MovementProcessor::init();
+    TileDisplayZone::init();
+
     connect(endpoint);
 }
 
 Client::~Client()
 {
+    MovementProcessor::free();
+    TileDisplayZone::free();
+
     if (NULL != m_player)
     {
         delete m_player;
@@ -23,6 +31,9 @@ Client::~Client()
         delete m_world;
         m_world = NULL;
     }
+
+    delete m_zoneDisplayZone;
+    m_zoneDisplayZone = NULL;
 }
 
 void Client::connect(boost::asio::ip::tcp::endpoint& endpoint)
@@ -83,7 +94,17 @@ void Client::handle_read(const boost::system::error_code& error)
                 for (std::vector<Player>::iterator it = m_downMessage.m_players.begin(); m_downMessage.m_players.end() != it; it++)
                 {
                     std::cout << it->m_area << it->m_tile.x << it->m_tile.y << it->m_zone.x << it->m_zone.y << std::endl;
+
+                    if (it->m_number == m_player->m_number)
+                    {
+                        m_player->m_area = it->m_area;
+                        m_player->m_tile = it->m_tile;
+                        m_player->m_zone = it->m_zone;
+                    }
                 }
+                SDL_FillRect(m_screen, 0, SDL_MapRGB(m_screen->format, 0, 0, 0));
+                m_zoneDisplayZone->render(m_screen, m_world->getArea(m_player->m_area), m_downMessage.m_players);
+                SDL_Flip(m_screen);
             }
             break;
 
